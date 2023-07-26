@@ -7,4 +7,4 @@ api/dist
 web/dist
 
 # Ignore database files
-api/contacts.db
+api/src/db
