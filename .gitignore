@@ -1,0 +1,10 @@
+# Ignore node_modules in both back-end and front-end
+api/node_modules
+web/node_modules
+
+# Ignore build artifacts
+api/dist
+web/dist
+
+# Ignore database files
+api/contacts.db
