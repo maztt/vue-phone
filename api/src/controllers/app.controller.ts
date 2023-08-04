@@ -33,4 +33,17 @@ export class AppController {
             })
         })
     }
+
+    static async show (id: number): Promise<any> {
+        const query = `SELECT * FROM contacts WHERE id = ${id}`
+        return new Promise((resolve, reject) => {
+            db.all(query, (err, rows) => {
+                if (err) {
+                    console.error(`An error occurred while trying to retrieve data from ID: ${id}. `, err.message)
+                    reject(err)
+                }
+                resolve(rows)
+            })
+        })
+    }
 }

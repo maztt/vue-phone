@@ -21,5 +21,10 @@ router.get('/mycontacts', async (req: Request, res: Response) => {
   const data = await AppController.list()
   return res.send(data)
 })
+router.get('/show/:id', async (req: Request, res: Response) => {
+  const { id } = req.params
+  const data = await AppController.show(+id)
+  return res.send(data)
+})
 
 export default router;
