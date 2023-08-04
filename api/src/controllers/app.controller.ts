@@ -21,5 +21,16 @@ export class AppController {
         return data
     }
 
-
+    static async list (): Promise<AddContactDTO[]> {
+        const query = 'SELECT * FROM contacts'
+        return new Promise((resolve, reject) => {
+            db.all(query, [], (err, rows) => {
+                if (err) {
+                    console.error('Error while trying to retrieve data: ', err.message)
+                    reject(err)
+                }
+                resolve(rows as AddContactDTO[])
+            })
+        })
+    }
 }
