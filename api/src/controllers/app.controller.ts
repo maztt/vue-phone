@@ -46,4 +46,17 @@ export class AppController {
             })
         })
     }
+        
+    static async delete (id: number): Promise<boolean> {
+        const query = `DELETE FROM contacts where id = ${id}`
+        return new Promise((resolve, reject) => {
+            db.run(query, (err) => {
+                if (err) {
+                    console.error(`An error occurred while trying to delete ID: ${id}. `, err.message)
+                    reject(err)
+                }
+                resolve(true)
+            })
+        })
+    }
 }
