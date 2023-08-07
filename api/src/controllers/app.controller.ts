@@ -48,7 +48,9 @@ export class AppController {
     }
         
     static async delete (id: number): Promise<boolean> {
-        const query = `DELETE FROM contacts where id = ${id}`
+        const isValid = await this.show(id)
+        if (!isValid) return false
+        const query = `DELETE FROM contacts WHERE id = ${id}`
         return new Promise((resolve, reject) => {
             db.run(query, (err) => {
                 if (err) {

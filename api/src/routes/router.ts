@@ -28,7 +28,10 @@ router.get('/show/:id', async (req: Request, res: Response) => {
 })
 router.delete('/delete/:id', async (req: Request, res: Response) => {
   const { id } = req.params
-  await AppController.delete(+id)
+  const response = await AppController.delete(+id)
+  if (!response) {
+    return responseToUser(404, `Contact ${id} has not been found.`, res)
+  }
   return responseToUser(200, `Contact ${id} has been deleted from the database.`, res)
 })
 
