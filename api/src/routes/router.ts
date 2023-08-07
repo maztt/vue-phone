@@ -34,5 +34,14 @@ router.delete('/delete/:id', async (req: Request, res: Response) => {
   }
   return responseToUser(200, `Contact ${id} has been deleted from the database.`, res)
 })
+router.patch('/update/:id', async (req: Request, res: Response) => {
+  const { id } = req.params
+  const data = req.body
+  const response = await AppController.update(+id, data)
+  if (!response) {
+    return responseToUser(404, `Contact ${id} has not been found.`, res)
+  }
+  return responseToUser(200, `Contact ${id} has been updated in the database.`, res)
+})
 
 export default router;

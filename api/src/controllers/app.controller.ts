@@ -61,4 +61,40 @@ export class AppController {
             })
         })
     }
+
+    static async update (id: number, data: AddContactDTO): Promise<AddContactDTO> {
+        const values: (string | number)[] = []
+        const fieldsToUpdate = []
+        if (data.name) {
+            fieldsToUpdate.push(` name = ?`)
+            values.push(data.name)
+        }
+        if (data.phone) {
+            fieldsToUpdate.push(` phone = ?`)
+            values.push(data.phone)
+        }
+        if (data.email) {
+            fieldsToUpdate.push(` email = ?`)
+            values.push(data.email)
+        }
+        if (data.picture) {
+            fieldsToUpdate.push(` picture = ?`)
+            values.push(data.picture)
+        }
+        values.push(id)
+        const query = `
+        UPDATE contacts
+        SET ${fieldsToUpdate.join(', ')}
+        WHERE id = ?
+        `
+        return new Promise((resolve, reject) => {
+            db.run(query, values, (err) => {
+                if (err) {
+                    console.error(`An error occurred while trying to update ID: ${id}.`, err.message)
+                    reject(err)
+                }
+                resolve(this.show(id))
+            })
+        })
+    }
 }
