@@ -37,12 +37,12 @@ export class AppController {
     static async show (id: number): Promise<AddContactDTO> {
         const query = `SELECT * FROM contacts WHERE id = ${id}`
         return new Promise((resolve, reject) => {
-            db.all(query, (err, rows) => {
+            db.get(query, (err, row) => {
                 if (err) {
                     console.error(`An error occurred while trying to retrieve data from ID: ${id}. `, err.message)
                     reject(err)
                 }
-                resolve(rows[0] as AddContactDTO)
+                resolve(row as AddContactDTO)
             })
         })
     }
