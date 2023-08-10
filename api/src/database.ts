@@ -16,7 +16,10 @@ const initializeDb = () => {
           name TEXT NOT NULL,
           phone TEXT NOT NULL,
           email TEXT NOT NULL,
-          picture TEXT
+          picture TEXT,
+          createdAt TEXT NOT NULL,
+          updatedAt TEXT,
+          deletedAt TEXT
         )
       `, (err) => {
         if (err) {
