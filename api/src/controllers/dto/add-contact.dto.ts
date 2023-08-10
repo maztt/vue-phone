@@ -1,6 +1,16 @@
-export interface AddContactDTO {
+import { IsString, IsEmail, IsOptional } from 'class-validator'
+
+export class AddContactDTO {
+    @IsString()
     name: string
-    phone: number
+
+    @IsString()
+    phone: string
+
+    @IsEmail()
     email: string
+
+    @IsOptional()
+    @IsString()
     picture?: string
 }
