@@ -40,16 +40,7 @@ export class AppController {
     static async delete (id: number): Promise<boolean> {
         const isValid = await this.show(id)
         if (!isValid) return false
-        const query = `DELETE FROM contacts WHERE id = ${id}`
-        return new Promise((resolve, reject) => {
-            db.run(query, (err) => {
-                if (err) {
-                    console.error(`An error occurred while trying to delete ID: ${id}. `, err.message)
-                    reject(err)
-                }
-                resolve(true)
-            })
-        })
+        return await ContactsRepository.delete(id)
     }
 
     static async update (id: number, data: AddContactDTO): Promise<AddContactDTO> {

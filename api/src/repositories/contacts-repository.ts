@@ -80,4 +80,19 @@ export class ContactsRepository {
             })
         })
     }
+
+    static async delete (id: number): Promise<boolean> {
+        const deletedAt = new Date().toISOString()
+        const query = `UPDATE contacts SET deletedAt = ? WHERE id = ${id}`
+        return new Promise((resolve, reject) => {
+            db.run(query, deletedAt, (err) => {
+                if (err) {
+                    console.error(`An error occurred while trying to delete ID: ${id}. `, err.message)
+                    reject(err)
+                    return
+                }
+                resolve(true)
+            })
+        })
+    }
 }
