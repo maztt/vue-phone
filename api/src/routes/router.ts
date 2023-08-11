@@ -5,6 +5,7 @@ import { requestFieldsValidator } from '../helpers/request-fields-validator';
 import { responseToUser } from '../helpers/response-to-user';
 import { AddContactDTO } from '../controllers/dto/add-contact.dto';
 import { validationMiddleware } from '../middlewares/validationMiddleware';
+import { UpdateContactDTO } from '../controllers/dto/update-contact.dto';
 
 const router: Router = express.Router();
 
@@ -35,7 +36,7 @@ router.delete('/delete/:id', async (req: Request, res: Response) => {
   }
   return responseToUser(200, `Contact ${id} has been deleted from the database.`, res)
 })
-router.patch('/update/:id', async (req: Request, res: Response) => {
+router.patch('/update/:id', validationMiddleware(UpdateContactDTO), async (req: Request, res: Response) => {
   const { id } = req.params
   const data = req.body
   return await AppController.update(+id, data)
