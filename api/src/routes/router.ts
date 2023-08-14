@@ -1,8 +1,6 @@
 import express, { Router } from 'express'
 import { Request, Response } from 'express';
 import { AppController } from '../controllers/app.controller';
-import { requestFieldsValidator } from '../helpers/request-fields-validator';
-import { responseToUser } from '../helpers/response-to-user';
 import { AddContactDTO } from '../controllers/dto/add-contact.dto';
 import { validationMiddleware } from '../middlewares/validationMiddleware';
 import { UpdateContactDTO } from '../controllers/dto/update-contact.dto';
@@ -13,33 +11,50 @@ router.get('/', (req: Request, res: Response) => {
   res.send('Hello World!');
 });
 router.post('/add', validationMiddleware(AddContactDTO), async (req: Request, res: Response) => {
-  const isValid = requestFieldsValidator(req.body, res)
-  if (isValid !== true) return
-  const added = await AppController.add(req.body)
-  if (!added) return responseToUser(500, 'Failed to add contact', res)
-  return responseToUser(201, `Contact ${added.name} added successfully.`, res)
+  try {
+    const added = await AppController.add(req.body)
+    return res.status(200).json(added)
+  } catch (err) {
+    return res.status(500).send(err)
+  }
 })
 router.get('/mycontacts', async (req: Request, res: Response) => {
-  const data = await AppController.list()
-  return res.send(data)
+  try {
+    const data = await AppController.list()
+    return res.json(data)
+  } catch (err) {
+    return res.status(500).send(err)
+  }
 })
 router.get('/show/:id', async (req: Request, res: Response) => {
-  const { id } = req.params
-  const data = await AppController.show(+id)
-  return res.send(data)
+  try {
+    const { id } = req.params
+    const data = await AppController.show(+id)
+    return res.json(data)
+  } catch (err) {
+    return res.status(500).send(err)
+  }
 })
 router.delete('/delete/:id', async (req: Request, res: Response) => {
-  const { id } = req.params
-  const response = await AppController.delete(+id)
-  if (!response) {
-    return responseToUser(404, `Contact ${id} has not been found.`, res)
+  try {
+    const { id } = req.params
+    const response = await AppController.delete(+id)
+    if (!response) {
+      return res.status(404).json(`Contact ${id} has not been found.`)
+    }
+    return res.status(200).json(`Contact ${id} has been deleted from the database.`)
+  } catch (err) {
+    return res.status(500).send(err)
   }
-  return responseToUser(200, `Contact ${id} has been deleted from the database.`, res)
 })
 router.patch('/update/:id', validationMiddleware(UpdateContactDTO), async (req: Request, res: Response) => {
-  const { id } = req.params
-  const data = req.body
-  return await AppController.update(+id, data)
+  try {
+    const { id } = req.params
+    const updated = await AppController.update(+id, req.body)
+    return res.status(200).json(updated)
+  } catch (err) {
+    return res.status(500).send(err)
+  }
 })
 
 export default router;
