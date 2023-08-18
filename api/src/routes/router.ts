@@ -30,6 +30,9 @@ router.get('/show/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
     const data = await AppController.show(+id)
+    if (!data) {
+      return res.status(404).json(`Contact ${id} has not been found.`)
+    }
     return res.json(data)
   } catch (err) {
     return res.status(500).send(err)

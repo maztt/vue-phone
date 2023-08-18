@@ -27,17 +27,9 @@ export class AppController {
         return contacts
     }
 
-    static async show (id: number): Promise<AddContactDTO> {
-        const query = `SELECT * FROM contacts WHERE id = ${id}`
-        return new Promise((resolve, reject) => {
-            db.get(query, (err, row) => {
-                if (err) {
-                    console.error(`An error occurred while trying to retrieve data from ID: ${id}. `, err.message)
-                    reject(err)
-                }
-                resolve(row as AddContactDTO)
-            })
-        })
+    static async show (id: number): Promise<Contact> {
+        const contact = await ContactsRepository.show(id)
+        return contact
     }
 
     static async delete (id: number): Promise<boolean> {

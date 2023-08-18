@@ -48,6 +48,19 @@ export class ContactsRepository {
         })
     }
 
+    static async show (id: number): Promise<Contact> {
+        const query = `SELECT * FROM contacts WHERE id = ${id}`
+        return new Promise((resolve, reject) => {
+            db.get(query, (err, row) => {
+                if (err) {
+                    console.error(`An error occurred while trying to retrieve data from ID: ${id}. `, err.message)
+                    reject(err)
+                }
+                resolve(row as Contact)
+            })
+        })
+    }
+
     static async update (id: number, data: UpdateContactDTO): Promise<UpdateContactDTO> {
         const subquery = 'SELECT * FROM contacts WHERE id = ?'
         const updatedAt = new Date().toISOString()
