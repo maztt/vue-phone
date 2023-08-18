@@ -1,6 +1,7 @@
 import sqlite3 from 'sqlite3'
 import { AddContactDTO } from '../controllers/dto/add-contact.dto'
-import { Contact } from '../controllers/dto/contact.dto'
+import { Contact } from '../controllers/dto/contact'
+import { UpdateContactDTO } from '../controllers/dto/update-contact.dto'
 
 const dbPath = './src/db/db.sqlite'
 const db = new sqlite3.Database(dbPath)
@@ -47,9 +48,9 @@ export class ContactsRepository {
         })
     }
 
-    static async update (id: number, data: AddContactDTO): Promise<AddContactDTO> {
+    static async update (id: number, data: UpdateContactDTO): Promise<UpdateContactDTO> {
         const subquery = 'SELECT * FROM contacts WHERE id = ?'
-        const updatedAt = new Date().toISOString() 
+        const updatedAt = new Date().toISOString()
         const values: (string | number)[] = []
         const fieldsToUpdate: string[] = []
         console.log(data)
@@ -89,7 +90,7 @@ export class ContactsRepository {
                         return
                     }
                     console.log('Contact was successfully updated in the database!')
-                    resolve(row as AddContactDTO)
+                    resolve(row as UpdateContactDTO)
                 })
             })
         })

@@ -1,7 +1,8 @@
 import sqlite3 from 'sqlite3';
 import { ContactsRepository } from '../repositories/contacts-repository';
 import { AddContactDTO } from './dto/add-contact.dto'
-import { Contact } from './dto/contact.dto';
+import { Contact } from './dto/contact';
+import { UpdateContactDTO } from './dto/update-contact.dto';
 
 const dbPath = './src/db/db.sqlite';
 const db = new sqlite3.Database(dbPath);
@@ -12,7 +13,7 @@ export class AppController {
         return added
     }
 
-    static async list(): Promise<Contact[]> {
+    static async list (): Promise<Contact[]> {
         const data = await ContactsRepository.list()
         const contacts = data.map(contact => {
             return {
@@ -45,7 +46,7 @@ export class AppController {
         return await ContactsRepository.delete(id)
     }
 
-    static async update (id: number, data: AddContactDTO): Promise<AddContactDTO> {
+    static async update (id: number, data: UpdateContactDTO): Promise<UpdateContactDTO> {
         return await ContactsRepository.update(id, data)
     }
 }
