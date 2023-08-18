@@ -1,6 +1,7 @@
+import sqlite3 from 'sqlite3';
 import { ContactsRepository } from '../repositories/contacts-repository';
 import { AddContactDTO } from './dto/add-contact.dto'
-import sqlite3 from 'sqlite3';
+import { Contact } from './dto/contact.dto';
 
 const dbPath = './src/db/db.sqlite';
 const db = new sqlite3.Database(dbPath);
@@ -11,17 +12,18 @@ export class AppController {
         return added
     }
 
-    static async list (): Promise<AddContactDTO[]> {
-        const query = 'SELECT * FROM contacts'
-        return new Promise((resolve, reject) => {
-            db.all(query, [], (err, rows) => {
-                if (err) {
-                    console.error('Error while trying to retrieve data: ', err.message)
-                    reject(err)
-                }
-                resolve(rows as AddContactDTO[])
-            })
+    static async list(): Promise<Contact[]> {
+        const data = await ContactsRepository.list()
+        const contacts = data.map(contact => {
+            return {
+                id: contact.id,
+                name: contact.name,
+                phone: contact.phone,
+                email: contact.email,
+                picture: contact.picture
+            }
         })
+        return contacts
     }
 
     static async show (id: number): Promise<AddContactDTO> {
@@ -36,7 +38,7 @@ export class AppController {
             })
         })
     }
-        
+
     static async delete (id: number): Promise<boolean> {
         const isValid = await this.show(id)
         if (!isValid) return false

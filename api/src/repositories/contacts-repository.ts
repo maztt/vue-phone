@@ -1,5 +1,6 @@
 import sqlite3 from 'sqlite3'
 import { AddContactDTO } from '../controllers/dto/add-contact.dto'
+import { Contact } from '../controllers/dto/contact.dto'
 
 const dbPath = './src/db/db.sqlite'
 const db = new sqlite3.Database(dbPath)
@@ -11,7 +12,7 @@ export class ContactsRepository {
         const query = 'INSERT INTO contacts (name, phone, email, picture, createdAt) VALUES (?, ?, ?, ?, ?)'
         const subquery = 'SELECT * FROM contacts WHERE id = ?'
         const values = [name, phone, email, picture, createdAt]
-        
+
         return new Promise((resolve, reject) => {
             db.run(query, values, function (err) {
                 if (err) {
@@ -29,6 +30,19 @@ export class ContactsRepository {
                     console.log('Contact was successfully added to the database!')
                     resolve(row as AddContactDTO)
                 })
+            })
+        })
+    }
+
+    static async list (): Promise<Contact[]> {
+        const query = 'SELECT * FROM contacts'
+        return new Promise((resolve, reject) => {
+            db.all(query, [], (err, rows) => {
+                if (err) {
+                    console.error('Error while trying to retrieve data: ', err.message)
+                    reject(err)
+                }
+                resolve(rows as Contact[])
             })
         })
     }
