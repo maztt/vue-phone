@@ -51,7 +51,10 @@ router.patch('/update/:id', validationMiddleware(UpdateContactDTO), async (req: 
   try {
     const { id } = req.params
     const updated = await AppController.update(+id, req.body)
-    return res.status(200).json(updated)
+    if (!updated) {
+      return res.status(404).json(`Contact ${id} has not been found.`)
+    }
+    return res.status(200).json({message: `Contact ID ${id} has been updated.`, updated })
   } catch (err) {
     return res.status(500).send(err)
   }

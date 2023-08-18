@@ -46,7 +46,9 @@ export class AppController {
         return await ContactsRepository.delete(id)
     }
 
-    static async update (id: number, data: UpdateContactDTO): Promise<UpdateContactDTO> {
+    static async update (id: number, data: UpdateContactDTO): Promise<UpdateContactDTO | boolean> {
+        const isValid = await this.show(id)
+        if (!isValid) return false
         return await ContactsRepository.update(id, data)
     }
 }
